@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.0.5
-Release:        16.24%{?dist}
+Release:        16.25%{?dist}
 Summary:        Java project management and project comprehension tool
 
 License:        ASL 2.0
@@ -31,50 +31,50 @@ Patch300:       0001-default-to-ssl-for-central.patch
 BuildArch:      noarch
 
 BuildRequires:  %{?scl_prefix_java_common}maven-local
-BuildRequires:  maven30-xmvn >= 1.3.0-5
+BuildRequires:  %{?scl_prefix}xmvn >= 1.3.0-5
 
-BuildRequires:  maven30-aether-api >= 1.13.1-8
-BuildRequires:  maven30-aether-connector-wagon
-BuildRequires:  maven30-aether-impl
-BuildRequires:  maven30-aether-spi
-BuildRequires:  maven30-aether-util
-BuildRequires:  maven30-aopalliance
+BuildRequires:  %{?scl_prefix}aether-api >= 1.13.1-8
+BuildRequires:  %{?scl_prefix}aether-connector-wagon
+BuildRequires:  %{?scl_prefix}aether-impl
+BuildRequires:  %{?scl_prefix}aether-spi
+BuildRequires:  %{?scl_prefix}aether-util
+BuildRequires:  %{?scl_prefix}aopalliance
 BuildRequires:  %{?scl_prefix_java_common}apache-commons-cli
-BuildRequires:  maven30-apache-commons-jxpath
-BuildRequires:  maven30-apache-resource-bundles
+BuildRequires:  %{?scl_prefix}apache-commons-jxpath
+BuildRequires:  %{?scl_prefix}apache-resource-bundles
 BuildRequires:  %{?scl_prefix_java_common}atinject
-BuildRequires:  maven30-cglib
+BuildRequires:  %{?scl_prefix}cglib
 BuildRequires:  %{?scl_prefix_java_common}easymock
-BuildRequires:  maven30-google-guice >= 3.1.3-8
+BuildRequires:  %{?scl_prefix}google-guice >= 3.1.3-8
 BuildRequires:  %{?scl_prefix_java_common}hamcrest
 BuildRequires:  %{?scl_prefix_java_common}junit
-BuildRequires:  maven30-maven-assembly-plugin
-BuildRequires:  maven30-maven-compiler-plugin
-BuildRequires:  maven30-maven-install-plugin
-BuildRequires:  maven30-maven-jar-plugin
-BuildRequires:  maven30-maven-javadoc-plugin
-BuildRequires:  maven30-maven-parent
-BuildRequires:  maven30-maven-remote-resources-plugin
-BuildRequires:  maven30-maven-resources-plugin
-BuildRequires:  maven30-maven-site-plugin
-BuildRequires:  maven30-maven-surefire-plugin
-BuildRequires:  maven30-maven-wagon-file
-BuildRequires:  maven30-maven-wagon-http
-BuildRequires:  maven30-maven-wagon-http-shared4
-BuildRequires:  maven30-maven-wagon-provider-api
+BuildRequires:  %{?scl_prefix}maven-assembly-plugin
+BuildRequires:  %{?scl_prefix}maven-compiler-plugin
+BuildRequires:  %{?scl_prefix}maven-install-plugin
+BuildRequires:  %{?scl_prefix}maven-jar-plugin
+BuildRequires:  %{?scl_prefix}maven-javadoc-plugin
+BuildRequires:  %{?scl_prefix}maven-parent
+BuildRequires:  %{?scl_prefix}maven-remote-resources-plugin
+BuildRequires:  %{?scl_prefix}maven-resources-plugin
+BuildRequires:  %{?scl_prefix}maven-site-plugin
+BuildRequires:  %{?scl_prefix}maven-surefire-plugin
+BuildRequires:  %{?scl_prefix}maven-wagon-file
+BuildRequires:  %{?scl_prefix}maven-wagon-http
+BuildRequires:  %{?scl_prefix}maven-wagon-http-shared4
+BuildRequires:  %{?scl_prefix}maven-wagon-provider-api
 BuildRequires:  %{?scl_prefix_java_common}objectweb-asm
-BuildRequires:  maven30-plexus-cipher
-BuildRequires:  maven30-plexus-classworlds
-BuildRequires:  maven30-plexus-containers-component-annotations
-BuildRequires:  maven30-plexus-containers-component-metadata >= 1.5.5
-BuildRequires:  maven30-plexus-interpolation
-BuildRequires:  maven30-plexus-sec-dispatcher
-BuildRequires:  maven30-plexus-utils
-BuildRequires:  maven30-sisu-inject-bean
-BuildRequires:  maven30-sisu-inject-plexus
-BuildRequires:  maven30-xmlunit
+BuildRequires:  %{?scl_prefix}plexus-cipher
+BuildRequires:  %{?scl_prefix}plexus-classworlds
+BuildRequires:  %{?scl_prefix}plexus-containers-component-annotations
+BuildRequires:  %{?scl_prefix}plexus-containers-component-metadata >= 1.5.5
+BuildRequires:  %{?scl_prefix}plexus-interpolation
+BuildRequires:  %{?scl_prefix}plexus-sec-dispatcher
+BuildRequires:  %{?scl_prefix}plexus-utils
+BuildRequires:  %{?scl_prefix}sisu-inject-bean
+BuildRequires:  %{?scl_prefix}sisu-inject-plexus
+BuildRequires:  %{?scl_prefix}xmlunit
 %if 0%{?fedora}
-BuildRequires:  maven30-animal-sniffer >= 1.6-5
+BuildRequires:  %{?scl_prefix}animal-sniffer >= 1.6-5
 %endif
 
 Requires:       which
@@ -85,33 +85,33 @@ Requires:       which
 # by XMvn.  It would be possible to explicitly specify only
 # dependencies which are not generated automatically, but adding
 # everything seems to be easier.
-Requires:       maven30-aether-api
-Requires:       maven30-aether-connector-wagon
-Requires:       maven30-aether-impl
-Requires:       maven30-aether-spi
-Requires:       maven30-aether-util
-Requires:       maven30-aopalliance
+Requires:       %{?scl_prefix}aether-api
+Requires:       %{?scl_prefix}aether-connector-wagon
+Requires:       %{?scl_prefix}aether-impl
+Requires:       %{?scl_prefix}aether-spi
+Requires:       %{?scl_prefix}aether-util
+Requires:       %{?scl_prefix}aopalliance
 Requires:       %{?scl_prefix_java_common}apache-commons-cli
 Requires:       %{?scl_prefix_java_common}apache-commons-codec
 Requires:       %{?scl_prefix_java_common}apache-commons-logging
 Requires:       %{?scl_prefix_java_common}atinject
-Requires:       maven30-cglib
-Requires:       maven30-google-guice
+Requires:       %{?scl_prefix}cglib
+Requires:       %{?scl_prefix}google-guice
 Requires:       %{?scl_prefix_java_common}guava
-Requires:       maven30-httpcomponents-client
-Requires:       maven30-httpcomponents-core
-Requires:       maven30-maven-wagon-file
-Requires:       maven30-maven-wagon-http
-Requires:       maven30-maven-wagon-http-shared4
-Requires:       maven30-maven-wagon-provider-api
+Requires:       %{?scl_prefix}httpcomponents-client
+Requires:       %{?scl_prefix}httpcomponents-core
+Requires:       %{?scl_prefix}maven-wagon-file
+Requires:       %{?scl_prefix}maven-wagon-http
+Requires:       %{?scl_prefix}maven-wagon-http-shared4
+Requires:       %{?scl_prefix}maven-wagon-provider-api
 Requires:       %{?scl_prefix_java_common}objectweb-asm
-Requires:       maven30-plexus-cipher
-Requires:       maven30-plexus-containers-component-annotations
-Requires:       maven30-plexus-interpolation
-Requires:       maven30-plexus-sec-dispatcher
-Requires:       maven30-plexus-utils
-Requires:       maven30-sisu-inject-bean
-Requires:       maven30-sisu-inject-plexus
+Requires:       %{?scl_prefix}plexus-cipher
+Requires:       %{?scl_prefix}plexus-containers-component-annotations
+Requires:       %{?scl_prefix}plexus-interpolation
+Requires:       %{?scl_prefix}plexus-sec-dispatcher
+Requires:       %{?scl_prefix}plexus-utils
+Requires:       %{?scl_prefix}sisu-inject-bean
+Requires:       %{?scl_prefix}sisu-inject-plexus
 
 %description
 Maven is a software project management and comprehension tool. Based on the
@@ -126,7 +126,7 @@ Summary:        API documentation for %{pkg_name}
 
 %prep
 %setup -q -n apache-%{pkg_name}-%{version}%{?ver_add}
-%{?scl:scl enable maven30 %{scl} - <<"EOF"}
+%{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
 %patch100 -p1
 %patch200 -p1
@@ -171,7 +171,7 @@ sed -i -e s:'-classpath "${M2_HOME}"/boot/plexus-classworlds-\*.jar':'-classpath
 %{?scl:EOF}
 
 %build
-%{?scl:scl enable maven30 %{scl} - <<"EOF"}
+%{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
 # Put all JARs in standard location, but create symlinks in Maven lib
 # directory so that Plexus Classworlds can find them.
@@ -189,7 +189,7 @@ mkdir m2home
 
 
 %install
-%{?scl:scl enable maven30 %{scl} - <<"EOF"}
+%{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
 %mvn_install
 
@@ -277,6 +277,9 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Mon Jan 11 2016 Michal Srb <msrb@redhat.com> - 3.0.5-16.25
+- maven33 rebuild #2
+
 * Sat Jan 09 2016 Michal Srb <msrb@redhat.com> - 3.0.5-16.24
 - maven33 rebuild
 
