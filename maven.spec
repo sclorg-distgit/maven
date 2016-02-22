@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.3.9
-Release:        2.1%{?dist}
+Release:        2.2%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -233,11 +233,9 @@ ln -sf $(build-classpath plexus/classworlds) \
     %{buildroot}%{_datadir}/%{pkg_name}/boot/plexus-classworlds.jar
 
 (cd %{buildroot}%{_datadir}/%{pkg_name}/lib
-    # 1. atinject, aopalliance and objectweb-asm are bundled in
-    #    sisu-inject-bean upstream normally
-    # 2. httpcomponents-core, httpcomponents-client, commons-logging
-    #    and commons-codec are bundled in wagon-http-shaded upstream
-    #    normally
+    # httpcomponents-core, httpcomponents-client, commons-logging
+    # and commons-codec are bundled in wagon-http-shaded upstream
+    # normally
     build-jar-repository -s -p . \
         aether/aether-api \
         aether/aether-connector-basic \
@@ -274,7 +272,6 @@ ln -sf $(build-classpath plexus/classworlds) \
         httpcomponents/httpcore \
         commons-logging \
         commons-codec \
-        objectweb-asm/asm \
 )
 %{?scl:EOF}
 
@@ -299,6 +296,9 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Mon Jan 18 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.2
+- Do not symlink objectweb-asm, it's bundled in sisu
+
 * Thu Jan 14 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.1
 - rh-maven33 build
 
