@@ -1,9 +1,9 @@
 #!/bin/sh
-if [ -f /opt/rh/maven30/root/usr/share/java-utils/java-functions ] ; then
-  . /opt/rh/maven30/root/usr/share/java-utils/java-functions
+if [ -f /opt/rh/rh-maven33/root/usr/share/java-utils/java-functions ] ; then
+  . /opt/rh/rh-maven33/root/usr/share/java-utils/java-functions
   set_jvm
   set_javacmd
 fi
 
-export M2_HOME="${M2_HOME:-/opt/rh/maven30/root/usr/share/maven}"
-export JAVA_HOME; $M2_HOME/bin/@MVN@ "$@"
+export M2_HOME="${M2_HOME:-/opt/rh/rh-maven33/root/usr/share/maven}"
+export JAVA_HOME; $M2_HOME/bin/@@CMD@@ "$@"

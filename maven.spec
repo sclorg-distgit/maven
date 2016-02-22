@@ -5,48 +5,48 @@
 %global debug_package %{nil}
 
 Name:           %{?scl_prefix}%{pkg_name}
-Version:        3.0.5
-Release:        16.25%{?dist}
+Version:        3.3.9
+Release:        2.1%{?dist}
 Summary:        Java project management and project comprehension tool
-
 License:        ASL 2.0
 URL:            http://maven.apache.org/
+BuildArch:      noarch
+
 Source0:        http://archive.apache.org/dist/%{pkg_name}/%{pkg_name}-3/%{version}/source/apache-%{pkg_name}-%{version}-src.tar.gz
 Source1:        maven-bash-completion
 Source2:        mvn.1
-
-# 2xx for created non-buildable sources
 Source200:      %{pkg_name}-script
 
-# Patch1XX could be upstreamed probably
-Patch100:       0005-Use-generics-in-modello-generated-code.patch
-
-# Patch2XX backported from upstream
-# Fixes MNG-5402 (patch from upstream commit f95ab2e)
-Patch200:       0001-MNG-5402-Better-build-number-for-git.patch
-
-# Access Maven Central via HTTPS by default
-Patch300:       0001-default-to-ssl-for-central.patch
-
-BuildArch:      noarch
+# XXX modello generates code which doesn't compile ???
+Patch0:         0001-Workaround-modello-weirdness.patch
 
 BuildRequires:  %{?scl_prefix_java_common}maven-local
-BuildRequires:  %{?scl_prefix}xmvn >= 1.3.0-5
 
-BuildRequires:  %{?scl_prefix}aether-api >= 1.13.1-8
-BuildRequires:  %{?scl_prefix}aether-connector-wagon
-BuildRequires:  %{?scl_prefix}aether-impl
-BuildRequires:  %{?scl_prefix}aether-spi
-BuildRequires:  %{?scl_prefix}aether-util
+BuildRequires:  %{?scl_prefix}aether-api >= 1:0
+BuildRequires:  %{?scl_prefix}aether-connector-basic >= 1:0
+BuildRequires:  %{?scl_prefix}aether-impl >= 1:0
+BuildRequires:  %{?scl_prefix}aether-spi >= 1:0
+BuildRequires:  %{?scl_prefix}aether-util >= 1:0
+BuildRequires:  %{?scl_prefix}aether-transport-wagon >= 1:0
 BuildRequires:  %{?scl_prefix}aopalliance
 BuildRequires:  %{?scl_prefix_java_common}apache-commons-cli
+BuildRequires:  %{?scl_prefix_java_common}apache-commons-io
+BuildRequires:  %{?scl_prefix_java_common}apache-commons-lang
+BuildRequires:  %{?scl_prefix}apache-commons-lang3
+BuildRequires:  %{?scl_prefix_java_common}apache-commons-codec
 BuildRequires:  %{?scl_prefix}apache-commons-jxpath
+BuildRequires:  %{?scl_prefix_java_common}apache-commons-logging
 BuildRequires:  %{?scl_prefix}apache-resource-bundles
 BuildRequires:  %{?scl_prefix_java_common}atinject
+BuildRequires:  %{?scl_prefix}buildnumber-maven-plugin
 BuildRequires:  %{?scl_prefix}cglib
-BuildRequires:  %{?scl_prefix_java_common}easymock
-BuildRequires:  %{?scl_prefix}google-guice >= 3.1.3-8
+BuildRequires:  %{?scl_prefix_java_common}easymock3
+BuildRequires:  %{?scl_prefix}google-guice >= 3.1.6
 BuildRequires:  %{?scl_prefix_java_common}hamcrest
+BuildRequires:  %{?scl_prefix}httpcomponents-core
+BuildRequires:  %{?scl_prefix}httpcomponents-client
+BuildRequires:  %{?scl_prefix_java_common}jsoup
+BuildRequires:  %{?scl_prefix}jsr-305
 BuildRequires:  %{?scl_prefix_java_common}junit
 BuildRequires:  %{?scl_prefix}maven-assembly-plugin
 BuildRequires:  %{?scl_prefix}maven-compiler-plugin
@@ -60,22 +60,24 @@ BuildRequires:  %{?scl_prefix}maven-site-plugin
 BuildRequires:  %{?scl_prefix}maven-surefire-plugin
 BuildRequires:  %{?scl_prefix}maven-wagon-file
 BuildRequires:  %{?scl_prefix}maven-wagon-http
-BuildRequires:  %{?scl_prefix}maven-wagon-http-shared4
+BuildRequires:  %{?scl_prefix}maven-wagon-http-shared
 BuildRequires:  %{?scl_prefix}maven-wagon-provider-api
-BuildRequires:  %{?scl_prefix_java_common}objectweb-asm
+BuildRequires:  %{?scl_prefix_java_common}objectweb-asm5
 BuildRequires:  %{?scl_prefix}plexus-cipher
 BuildRequires:  %{?scl_prefix}plexus-classworlds
 BuildRequires:  %{?scl_prefix}plexus-containers-component-annotations
 BuildRequires:  %{?scl_prefix}plexus-containers-component-metadata >= 1.5.5
 BuildRequires:  %{?scl_prefix}plexus-interpolation
 BuildRequires:  %{?scl_prefix}plexus-sec-dispatcher
-BuildRequires:  %{?scl_prefix}plexus-utils
-BuildRequires:  %{?scl_prefix}sisu-inject-bean
-BuildRequires:  %{?scl_prefix}sisu-inject-plexus
+BuildRequires:  %{?scl_prefix}plexus-utils >= 3.0.10
+BuildRequires:  %{?scl_prefix}sisu-inject >= 1:0.1
+BuildRequires:  %{?scl_prefix}sisu-plexus >= 1:0.1
+BuildRequires:  %{?scl_prefix}sisu-mojos
+BuildRequires:  %{?scl_prefix_java_common}slf4j
 BuildRequires:  %{?scl_prefix}xmlunit
-%if 0%{?fedora}
-BuildRequires:  %{?scl_prefix}animal-sniffer >= 1.6-5
-%endif
+#BuildRequires:  %{?scl_prefix_java_common}mvn(ch.qos.logback:logback-classic)
+#BuildRequires:  %{?scl_prefix_java_common}mvn(org.mockito:mockito-core)
+BuildRequires:  %{?scl_prefix}mvn(org.codehaus.modello:modello-maven-plugin)
 
 Requires:       which
 
@@ -86,32 +88,39 @@ Requires:       which
 # dependencies which are not generated automatically, but adding
 # everything seems to be easier.
 Requires:       %{?scl_prefix}aether-api
-Requires:       %{?scl_prefix}aether-connector-wagon
+Requires:       %{?scl_prefix}aether-connector-basic
 Requires:       %{?scl_prefix}aether-impl
 Requires:       %{?scl_prefix}aether-spi
+Requires:       %{?scl_prefix}aether-transport-wagon
 Requires:       %{?scl_prefix}aether-util
 Requires:       %{?scl_prefix}aopalliance
 Requires:       %{?scl_prefix_java_common}apache-commons-cli
+Requires:       %{?scl_prefix_java_common}apache-commons-io
+Requires:       %{?scl_prefix_java_common}apache-commons-lang
+Requires:       %{?scl_prefix}apache-commons-lang3
 Requires:       %{?scl_prefix_java_common}apache-commons-codec
 Requires:       %{?scl_prefix_java_common}apache-commons-logging
 Requires:       %{?scl_prefix_java_common}atinject
-Requires:       %{?scl_prefix}cglib
 Requires:       %{?scl_prefix}google-guice
 Requires:       %{?scl_prefix_java_common}guava
-Requires:       %{?scl_prefix}httpcomponents-client
-Requires:       %{?scl_prefix}httpcomponents-core
+Requires:       %{?scl_prefix_java_common}httpcomponents-client
+Requires:       %{?scl_prefix_java_common}httpcomponents-core
+Requires:       %{?scl_prefix_java_common}jsoup
+Requires:       %{?scl_prefix}jsr-305
 Requires:       %{?scl_prefix}maven-wagon-file
 Requires:       %{?scl_prefix}maven-wagon-http
-Requires:       %{?scl_prefix}maven-wagon-http-shared4
+Requires:       %{?scl_prefix}maven-wagon-http-shared
 Requires:       %{?scl_prefix}maven-wagon-provider-api
-Requires:       %{?scl_prefix_java_common}objectweb-asm
+Requires:       %{?scl_prefix_java_common}objectweb-asm5
 Requires:       %{?scl_prefix}plexus-cipher
+Requires:       %{?scl_prefix}plexus-classworlds
 Requires:       %{?scl_prefix}plexus-containers-component-annotations
 Requires:       %{?scl_prefix}plexus-interpolation
 Requires:       %{?scl_prefix}plexus-sec-dispatcher
 Requires:       %{?scl_prefix}plexus-utils
-Requires:       %{?scl_prefix}sisu-inject-bean
-Requires:       %{?scl_prefix}sisu-inject-plexus
+Requires:       %{?scl_prefix}sisu-inject
+Requires:       %{?scl_prefix}sisu-plexus
+Requires:       %{?scl_prefix_java_common}slf4j
 
 %description
 Maven is a software project management and comprehension tool. Based on the
@@ -128,9 +137,8 @@ Summary:        API documentation for %{pkg_name}
 %setup -q -n apache-%{pkg_name}-%{version}%{?ver_add}
 %{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
-%patch100 -p1
-%patch200 -p1
-%patch300 -p1
+# XXX modello problem
+%patch0 -p1
 
 # Generate build number based on package release number
 %pom_remove_plugin :buildnumber-maven-plugin maven-core
@@ -142,16 +150,11 @@ sed -i "
 /timestamp=/ d
 " `find -name build.properties`
 
-# Create Maven scripts
-sed s/@MVN@/mvn/      %{SOURCE200} >mvn
-sed s/@MVN@/mvnDebug/ %{SOURCE200} >mvnDebug
-sed s/@MVN@/mvnyjp/   %{SOURCE200} >mvnyjp
-
 # not really used during build, but a precaution
 rm maven-ant-tasks-*.jar
 
-# fix line endings
-sed -i 's:\r::' *.txt
+# Use Eclipse Sisu plugin
+sed -i s/org.sonatype.plugins/org.eclipse.sisu/ maven-core/pom.xml
 
 # fix for animal-sniffer (we don't generate 1.5 signatures)
 sed -i 's:check-java-1.5-compat:check-java-1.6-compat:' pom.xml
@@ -163,11 +166,17 @@ sed -i 's:\r::' apache-maven/src/conf/settings.xml
 sed -i -e s:'-classpath "${M2_HOME}"/boot/plexus-classworlds-\*.jar':'-classpath "${M2_HOME}"/boot/plexus-classworlds.jar':g \
         apache-maven/src/bin/mvn*
 
-# Disable animal-sniffer on RHEL
-# Temporarily disabled for fedora to solve asm & asm4 clashing on classpath
-#if [ %{?rhel} ]; then
+# Disable QA plugins which are not useful for us
 %pom_remove_plugin :animal-sniffer-maven-plugin
-#fi
+%pom_remove_plugin :apache-rat-plugin
+
+# logback is not really needed by maven in typical use cases, so set
+# its scope to provided
+%pom_xpath_inject "pom:dependency[pom:artifactId='logback-classic']" "<scope>provided</scope>" maven-embedder
+
+# XXX no logback in RHSCL yet
+rm maven-embedder/src/main/java/org/apache/maven/cli/logging/impl/LogbackConfiguration.java
+%pom_remove_dep :logback-classic maven-embedder
 %{?scl:EOF}
 
 %build
@@ -177,7 +186,8 @@ set -e -x
 # directory so that Plexus Classworlds can find them.
 %mvn_file ":{*}:jar:" %{pkg_name}/@1 %{_datadir}/%{pkg_name}/lib/@1
 
-%mvn_build -- -Dproject.build.sourceEncoding=UTF-8
+# XXX tests require mockito
+%mvn_build -f -- -Dproject.build.sourceEncoding=UTF-8
 
 mkdir m2home
 (cd m2home
@@ -204,15 +214,18 @@ install -d -m 755 %{buildroot}%{_sysconfdir}/%{pkg_name}
 install -d -m 755 %{buildroot}%{_sysconfdir}/bash_completion.d
 install -d -m 755 %{buildroot}%{_mandir}/man1
 
-install -p -m 755 mvn %{buildroot}%{_bindir}/
-install -p -m 755 mvnDebug %{buildroot}%{_bindir}/
-install -p -m 755 mvnyjp %{buildroot}%{_bindir}/
+for cmd in mvn mvnDebug mvnyjp; do
+    sed s/@@CMD@@/$cmd/ %{SOURCE200} >%{buildroot}%{_bindir}/$cmd
+    echo ".so man1/mvn.1" >%{buildroot}%{_mandir}/man1/$cmd.1
+done
 install -p -m 644 %{SOURCE2} %{buildroot}%{_mandir}/man1
 install -p -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/bash_completion.d/%{pkg_name}
 mv $M2_HOME/bin/m2.conf %{buildroot}%{_sysconfdir}
 ln -sf %{_sysconfdir}/m2.conf %{buildroot}%{_datadir}/%{pkg_name}/bin/m2.conf
 mv $M2_HOME/conf/settings.xml %{buildroot}%{_sysconfdir}/%{pkg_name}
 ln -sf %{_sysconfdir}/%{pkg_name}/settings.xml %{buildroot}%{_datadir}/%{pkg_name}/conf/settings.xml
+mv $M2_HOME/conf/logging %{buildroot}%{_sysconfdir}/%{pkg_name}
+ln -sf %{_sysconfdir}/%{pkg_name}/logging %{buildroot}%{_datadir}/%{pkg_name}/conf
 
 cp -a $M2_HOME/bin/* %{buildroot}%{_datadir}/%{pkg_name}/bin
 
@@ -227,56 +240,74 @@ ln -sf $(build-classpath plexus/classworlds) \
     #    normally
     build-jar-repository -s -p . \
         aether/aether-api \
-        aether/aether-connector-wagon \
+        aether/aether-connector-basic \
         aether/aether-impl \
         aether/aether-spi \
+        aether/aether-transport-wagon \
         aether/aether-util \
+        aopalliance \
+        cdi-api \
         commons-cli \
+        commons-io \
+        commons-lang \
+        commons-lang3 \
+        guava \
+        atinject \
+        jsoup/jsoup \
+        jsr-305 \
+        org.eclipse.sisu.inject \
+        org.eclipse.sisu.plexus \
         plexus/plexus-cipher \
         plexus/containers-component-annotations \
         plexus/interpolation \
         plexus/plexus-sec-dispatcher \
         plexus/utils \
-        guava \
         google-guice-no_aop \
-        sisu/sisu-inject-bean \
-        sisu/sisu-inject-plexus \
+        slf4j/api \
+        slf4j/simple \
         maven-wagon/file \
         maven-wagon/http-shaded \
+        maven-wagon/http-shared \
         maven-wagon/provider-api \
         \
-        atinject \
-        aopalliance \
-        cglib \
-        objectweb-asm/asm-all \
-        \
-        maven-wagon/http-shared4 \
-        httpcomponents/httpclient-4.2 \
-        httpcomponents/httpcore-4.2 \
+        httpcomponents/httpclient \
+        httpcomponents/httpcore \
         commons-logging \
         commons-codec \
+        objectweb-asm/asm \
 )
 %{?scl:EOF}
 
 
 %files -f .mfiles
-%doc LICENSE.txt NOTICE.txt README.txt
+%doc LICENSE NOTICE README.md
 %{_datadir}/%{pkg_name}
-%{_bindir}/mvn*
+%attr(0755,root,root) %{_bindir}/mvn*
 %dir %{_javadir}/%{pkg_name}
 %dir %{_mavenpomdir}/%{pkg_name}
 %dir %{_sysconfdir}/%{pkg_name}
+%dir %{_sysconfdir}/%{pkg_name}/logging
 %config(noreplace) %{_sysconfdir}/m2.conf
 %config(noreplace) %{_sysconfdir}/%{pkg_name}/settings.xml
+%config(noreplace) %{_sysconfdir}/%{pkg_name}/logging/simplelogger.properties
 %dir %{_sysconfdir}/bash_completion.d
 %config(noreplace) %{_sysconfdir}/bash_completion.d/%{pkg_name}
-%{_mandir}/man1/mvn.1.gz
+%{_mandir}/man1/mvn*.1.gz
 
 %files javadoc -f .mfiles-javadoc
-%doc LICENSE.txt NOTICE.txt
+%doc LICENSE NOTICE
 
 
 %changelog
+* Thu Jan 14 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.1
+- rh-maven33 build
+
+* Mon Jan 11 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-2
+- Fix symlinks: add commons-lang3 and remove geronimo-annotation
+
+* Mon Jan 11 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-1
+- Update to upstream version 3.3.9
+
 * Mon Jan 11 2016 Michal Srb <msrb@redhat.com> - 3.0.5-16.25
 - maven33 rebuild #2
 
