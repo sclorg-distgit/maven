@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.3.9
-Release:        2.2%{?dist}
+Release:        2.3%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -16,9 +16,6 @@ Source0:        http://archive.apache.org/dist/%{pkg_name}/%{pkg_name}-3/%{versi
 Source1:        maven-bash-completion
 Source2:        mvn.1
 Source200:      %{pkg_name}-script
-
-# XXX modello generates code which doesn't compile ???
-Patch0:         0001-Workaround-modello-weirdness.patch
 
 BuildRequires:  %{?scl_prefix_java_common}maven-local
 
@@ -137,8 +134,6 @@ Summary:        API documentation for %{pkg_name}
 %setup -q -n apache-%{pkg_name}-%{version}%{?ver_add}
 %{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
-# XXX modello problem
-%patch0 -p1
 
 # Generate build number based on package release number
 %pom_remove_plugin :buildnumber-maven-plugin maven-core
@@ -296,6 +291,9 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Mon Jan 18 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.3
+- Remove modello workaround
+
 * Mon Jan 18 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.2
 - Do not symlink objectweb-asm, it's bundled in sisu
 
