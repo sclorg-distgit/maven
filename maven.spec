@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.3.9
-Release:        2.4%{?dist}
+Release:        2.5%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -75,7 +75,7 @@ BuildRequires:  %{?scl_prefix}sisu-mojos
 BuildRequires:  %{?scl_prefix_java_common}slf4j
 BuildRequires:  %{?scl_prefix}xmlunit
 #BuildRequires:  %{?scl_prefix_java_common}mvn(ch.qos.logback:logback-classic)
-#BuildRequires:  %{?scl_prefix_java_common}mvn(org.mockito:mockito-core)
+BuildRequires:  %{?scl_prefix}mvn(org.mockito:mockito-core)
 BuildRequires:  %{?scl_prefix}mvn(org.codehaus.modello:modello-maven-plugin)
 
 Requires:       which
@@ -181,10 +181,9 @@ set -e -x
 
 # There is no logback in RHSCL, use stubs to compile LogbackConfiguration.java
 mkdir -p .m2/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar
-%{javac} -source 1.5 -target 1.5 -d $(find .m2 -empty) %{SOURCE500} %{SOURCE501}
+javac -source 1.5 -target 1.5 -d $(find .m2 -empty) %{SOURCE500} %{SOURCE501}
 
-# XXX tests require mockito
-%mvn_build -f -- -Dproject.build.sourceEncoding=UTF-8
+%mvn_build -- -Dproject.build.sourceEncoding=UTF-8
 
 mkdir m2home
 (cd m2home
@@ -293,6 +292,9 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Tue Jan 19 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-2.5
+- Enable running tests during build
+
 * Tue Jan 19 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-2.4
 - Use stubs to compile logback support
 
