@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.3.9
-Release:        2.3%{?dist}
+Release:        2.4%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -16,6 +16,8 @@ Source0:        http://archive.apache.org/dist/%{pkg_name}/%{pkg_name}-3/%{versi
 Source1:        maven-bash-completion
 Source2:        mvn.1
 Source200:      %{pkg_name}-script
+Source500:      Level.java
+Source501:      Logger.java
 
 BuildRequires:  %{?scl_prefix_java_common}maven-local
 
@@ -168,10 +170,6 @@ sed -i -e s:'-classpath "${M2_HOME}"/boot/plexus-classworlds-\*.jar':'-classpath
 # logback is not really needed by maven in typical use cases, so set
 # its scope to provided
 %pom_xpath_inject "pom:dependency[pom:artifactId='logback-classic']" "<scope>provided</scope>" maven-embedder
-
-# XXX no logback in RHSCL yet
-rm maven-embedder/src/main/java/org/apache/maven/cli/logging/impl/LogbackConfiguration.java
-%pom_remove_dep :logback-classic maven-embedder
 %{?scl:EOF}
 
 %build
@@ -180,6 +178,10 @@ set -e -x
 # Put all JARs in standard location, but create symlinks in Maven lib
 # directory so that Plexus Classworlds can find them.
 %mvn_file ":{*}:jar:" %{pkg_name}/@1 %{_datadir}/%{pkg_name}/lib/@1
+
+# There is no logback in RHSCL, use stubs to compile LogbackConfiguration.java
+mkdir -p .m2/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar
+%{javac} -source 1.5 -target 1.5 -d $(find .m2 -empty) %{SOURCE500} %{SOURCE501}
 
 # XXX tests require mockito
 %mvn_build -f -- -Dproject.build.sourceEncoding=UTF-8
@@ -291,6 +293,9 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Tue Jan 19 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-2.4
+- Use stubs to compile logback support
+
 * Mon Jan 18 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.3
 - Remove modello workaround
 
