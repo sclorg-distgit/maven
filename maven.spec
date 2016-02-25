@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.3.9
-Release:        2.6%{?dist}
+Release:        2.8%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -19,7 +19,7 @@ Source200:      %{pkg_name}-script
 Source500:      Level.java
 Source501:      Logger.java
 
-BuildRequires:  %{?scl_prefix_java_common}maven-local
+BuildRequires:  %{?scl_prefix}maven-local
 
 BuildRequires:  %{?scl_prefix}aether-api >= 1:0
 BuildRequires:  %{?scl_prefix}aether-connector-basic >= 1:0
@@ -292,6 +292,12 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Tue Feb 09 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.8
+- Rebuild to fix aopalliance symlink
+
+* Mon Feb 08 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.7
+- Fix BR on maven-local & co.
+
 * Mon Feb 08 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.6
 - BR/R aopalliance from rh-java-common SCL
 
