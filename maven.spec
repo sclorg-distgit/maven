@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.3.9
-Release:        2.5%{?dist}
+Release:        2.6%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -27,7 +27,7 @@ BuildRequires:  %{?scl_prefix}aether-impl >= 1:0
 BuildRequires:  %{?scl_prefix}aether-spi >= 1:0
 BuildRequires:  %{?scl_prefix}aether-util >= 1:0
 BuildRequires:  %{?scl_prefix}aether-transport-wagon >= 1:0
-BuildRequires:  %{?scl_prefix}aopalliance
+BuildRequires:  %{?scl_prefix_java_common}aopalliance
 BuildRequires:  %{?scl_prefix_java_common}apache-commons-cli
 BuildRequires:  %{?scl_prefix_java_common}apache-commons-io
 BuildRequires:  %{?scl_prefix_java_common}apache-commons-lang
@@ -92,7 +92,7 @@ Requires:       %{?scl_prefix}aether-impl
 Requires:       %{?scl_prefix}aether-spi
 Requires:       %{?scl_prefix}aether-transport-wagon
 Requires:       %{?scl_prefix}aether-util
-Requires:       %{?scl_prefix}aopalliance
+Requires:       %{?scl_prefix_java_common}aopalliance
 Requires:       %{?scl_prefix_java_common}apache-commons-cli
 Requires:       %{?scl_prefix_java_common}apache-commons-io
 Requires:       %{?scl_prefix_java_common}apache-commons-lang
@@ -292,6 +292,9 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Mon Feb 08 2016 Michal Srb <msrb@redhat.com> - 3.3.9-2.6
+- BR/R aopalliance from rh-java-common SCL
+
 * Tue Jan 19 2016 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-2.5
 - Enable running tests during build
 
