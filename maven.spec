@@ -8,7 +8,7 @@
 Name:           %{?scl_prefix}maven
 Epoch:          1
 Version:        3.5.0
-Release:        4.2%{?dist}
+Release:        4.3%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -170,6 +170,13 @@ sed -i 's:\r::' apache-maven/src/conf/settings.xml
 %pom_remove_plugin -r :maven-site-plugin
 %pom_remove_plugin -r :maven-enforcer-plugin
 %pom_remove_plugin -r :buildnumber-maven-plugin
+sed -i "
+/buildNumber=/ {
+  s/=.*/=Red Hat %{version}-%{release}/
+  s/%{dist}$//
+}
+/timestamp=/ d
+" `find -name build.properties`
 
 %mvn_package :apache-maven __noinstall
 
@@ -242,6 +249,9 @@ ln -sf %{_sysconfdir}/%{pkg_name}/logging %{buildroot}%{_datadir}/%{pkg_name}/co
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Aug 08 2017 Michael Simacek <msimacek@redhat.com> - 1:3.5.0-4.3
+- Generate build number based on package release number
+
 * Thu Jun 22 2017 Michael Simacek <msimacek@redhat.com> - 1:3.5.0-4.2
 - Mass rebuild 2017-06-22
 
